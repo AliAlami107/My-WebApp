@@ -1,0 +1,4 @@
+email,password,name,age,role,bio,image
+ali@uit.no,abc123,Ali Alami,23,model,I'm in Bergen ready to be in a commercial.,179,80,brown,black,asian,Bergen,Norway,"https://picsum.photos/400/500,/static/uploads/aliuit.no_image.jpg,/static/uploads/aliuit.no_Alex_Grey_Gaia-1.jpg,/static/uploads/aliuit.no_EFUW6BpWwAA9o9z.jpg_large.jpeg,/static/uploads/aliuit.no_EFUW6BpWwAA9o9z.jpg_large.jpeg,/static/uploads/aliuit.no_image.jpg,/static/uploads/aliuit.no_Alex_Grey_Gaia-1.jpg,/static/uploads/aliuit.no_EFUW6BpWwAA9o9z.jpg_large.jpeg"
+ali1@uit.no,abc123,ALi,45,actor,ertewtergregewrgrewg,232,64,hazel,red,asian,Oslo,Norway,"/static/uploads/ali1uit.no/1735519122_image.jpg,/static/uploads/ali1uit.no/1735519122_Alex_Grey_Gaia-1.jpg,/static/uploads/ali1uit.no/1735519122_EFUW6BpWwAA9o9z.jpg_large.jpeg"
+ehsan@uit.no,abc123,,,,,https://picsum.photos/400/500

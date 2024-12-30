@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - CastSwipe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .back-btn {
+            padding: 0.6rem 1.2rem;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #1557b0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #1a73e8;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .button-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        button, .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .save-btn {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #1557b0;
+        }
+
+        .cancel-btn {
+            background: #f1f3f4;
+            color: #1a1a1a;
+            border: 1px solid #dadce0;
+        }
+
+        .cancel-btn:hover {
+            background: #e8eaed;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .image-upload-section {
+            grid-column: 1 / -1;
+            margin-bottom: 2rem;
+        }
+
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: #f8f9fa;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .remove-image:hover {
+            background: rgba(220, 53, 69, 1);
+        }
+
+        .upload-instructions {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .error-message {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">CastSwipe</div>
+        <a href="{{ url_for('talent_dashboard') }}" class="back-btn">Back to Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="form-title">Edit Your Profile</h1>
+        
+        <form method="POST" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="{{ profile.email }}" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" value="{{ profile.name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" value="{{ profile.age }}" required min="18" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role <span class="required">*</span></label>
+                    <select id="role" name="role" required>
+                        <option value="actor" {% if profile.role == 'actor' %}selected{% endif %}>Actor</option>
+                        <option value="model" {% if profile.role == 'model' %}selected{% endif %}>Model</option>
+                        <option value="musician" {% if profile.role == 'musician' %}selected{% endif %}>Musician</option>
+                        <option value="dancer" {% if profile.role == 'dancer' %}selected{% endif %}>Dancer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Height (cm) <span class="required">*</span></label>
+                    <input type="number" id="height" name="height" value="{{ profile.height }}" required min="100" max="250">
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight (kg) <span class="required">*</span></label>
+                    <input type="number" id="weight" name="weight" value="{{ profile.weight }}" required min="30" max="200">
+                </div>
+
+                <div class="form-group">
+                    <label for="eye_color">Eye Color <span class="required">*</span></label>
+                    <select id="eye_color" name="eye_color" required>
+                        <option value="brown" {% if profile.eye_color == 'brown' %}selected{% endif %}>Brown</option>
+                        <option value="blue" {% if profile.eye_color == 'blue' %}selected{% endif %}>Blue</option>
+                        <option value="green" {% if profile.eye_color == 'green' %}selected{% endif %}>Green</option>
+                        <option value="hazel" {% if profile.eye_color == 'hazel' %}selected{% endif %}>Hazel</option>
+                        <option value="other" {% if profile.eye_color == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hair_color">Hair Color <span class="required">*</span></label>
+                    <select id="hair_color" name="hair_color" required>
+                        <option value="black" {% if profile.hair_color == 'black' %}selected{% endif %}>Black</option>
+                        <option value="brown" {% if profile.hair_color == 'brown' %}selected{% endif %}>Brown</option>
+                        <option value="blonde" {% if profile.hair_color == 'blonde' %}selected{% endif %}>Blonde</option>
+                        <option value="red" {% if profile.hair_color == 'red' %}selected{% endif %}>Red</option>
+                        <option value="other" {% if profile.hair_color == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="race">Race <span class="required">*</span></label>
+                    <select id="race" name="race" required>
+                        <option value="asian" {% if profile.race == 'asian' %}selected{% endif %}>Asian</option>
+                        <option value="black" {% if profile.race == 'black' %}selected{% endif %}>Black</option>
+                        <option value="hispanic" {% if profile.race == 'hispanic' %}selected{% endif %}>Hispanic</option>
+                        <option value="white" {% if profile.race == 'white' %}selected{% endif %}>White</option>
+                        <option value="mixed" {% if profile.race == 'mixed' %}selected{% endif %}>Mixed</option>
+                        <option value="other" {% if profile.race == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <input type="text" id="city" name="city" value="{{ profile.city }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country <span class="required">*</span></label>
+                    <input type="text" id="country" name="country" value="{{ profile.country }}" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="bio">Bio <span class="required">*</span></label>
+                    <textarea id="bio" name="bio" required>{{ profile.bio }}</textarea>
+                </div>
+
+                <div class="form-group full-width image-upload-section">
+                    <label for="photos">Profile Photos <span class="required">*</span></label>
+                    <input type="file" id="photos" name="photos" accept="image/*" multiple>
+                    <p class="upload-instructions">Upload between 3 and 8 photos. Accepted formats: PNG, JPG, JPEG, GIF</p>
+                    <div id="errorMessage" class="error-message"></div>
+                    
+                    <div class="image-preview-container" id="imagePreviewContainer">
+                        {% if profile.images %}
+                            {% for image in profile.images %}
+                                <div class="image-preview" data-image="{{ image }}">
+                                    <img src="{{ image }}" alt="Profile photo">
+                                    <input type="hidden" name="existing_images" value="{{ image }}">
+                                    <button type="button" class="remove-image" onclick="deleteImage(this)">×</button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <a href="{{ url_for('talent_dashboard') }}" class="btn cancel-btn">Cancel</a>
+                    <button type="submit" class="btn save-btn">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const photoInput = document.getElementById('photos');
+        const errorMessageDiv = document.getElementById('errorMessage');
+        
+        // Function to show error message
+        function showError(message) {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.style.color = '#dc3545';
+            setTimeout(() => {
+                errorMessageDiv.textContent = '';
+            }, 3000);
+        }
+
+        // Function to show success message
+        function showSuccess(message) {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.style.color = '#28a745';
+            setTimeout(() => {
+                errorMessageDiv.textContent = '';
+            }, 3000);
+        }
+
+        photoInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            const currentImages = document.querySelectorAll('.image-preview').length;
+            const totalImages = currentImages + files.length;
+            
+            if (totalImages > {{ MAX_IMAGES }}) {
+                showError(`Maximum ${MAX_IMAGES} images allowed`);
+                this.value = ''; // Clear the file input
+                return;
+            }
+            
+            for (let file of files) {
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'image-preview';
+                        previewDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <button type="button" class="remove-image" onclick="removeNewImage(this)">×</button>
+                        `;
+                        imagePreviewContainer.appendChild(previewDiv);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Function to remove new (not yet uploaded) images
+        function removeNewImage(button) {
+            const totalImages = document.querySelectorAll('.image-preview').length;
+            if (totalImages <= {{ MIN_IMAGES }}) {
+                showError(`You must maintain at least {{ MIN_IMAGES }} images`);
+                return;
+            }
+            button.closest('.image-preview').remove();
+        }
+
+        // Function to delete existing images
+        async function deleteImage(button) {
+            const imagePreview = button.closest('.image-preview');
+            const imagePath = imagePreview.dataset.image;
+            const totalImages = document.querySelectorAll('.image-preview').length;
+
+            if (totalImages <= {{ MIN_IMAGES }}) {
+                showError(`You must maintain at least {{ MIN_IMAGES }} images`);
+                return;
+            }
+
+            try {
+                const response = await fetch('/delete_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image_path: imagePath })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    imagePreview.remove();
+                    showSuccess('Image deleted successfully');
+                } else {
+                    showError(data.error || 'Failed to delete image');
+                }
+            } catch (error) {
+                showError('Error deleting image');
+                console.error('Error:', error);
+            }
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const totalImages = document.querySelectorAll('.image-preview').length + 
+                              document.getElementById('photos').files.length;
+            
+            if (totalImages < {{ MIN_IMAGES }}) {
+                e.preventDefault();
+                showError(`Please upload at least {{ MIN_IMAGES }} images`);
+            } else if (totalImages > {{ MAX_IMAGES }}) {
+                e.preventDefault();
+                showError(`Maximum {{ MAX_IMAGES }} images allowed`);
+            }
+        });
+    </script>
+</body>
+</html> 

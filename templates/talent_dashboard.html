@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Dashboard - CastSwipe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1.5rem;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #1557b0;
+        }
+
+        .dashboard {
+            margin-top: 80px;
+            padding: 2rem 5%;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            object-fit: cover;
+            border: 3px solid #1a73e8;
+            display: block;
+        }
+
+        .profile-image-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .profile-role {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .edit-profile-btn {
+            background: #1a73e8;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .edit-profile-btn:hover {
+            background: #1557b0;
+        }
+
+        .dashboard-content {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .recent-activity {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #1a73e8;
+        }
+
+        .activity-details h4 {
+            margin-bottom: 0.25rem;
+            color: #1a1a1a;
+        }
+
+        .activity-details p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .bio-section {
+            text-align: left;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .bio-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">CastSwipe</div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </nav>
+
+    <div class="dashboard">
+        <!-- Profile Sidebar -->
+        <div class="profile-card">
+            <div class="profile-image-container">
+                <img src="{{ talent.image }}" alt="Profile" class="profile-image" onerror="this.src='https://picsum.photos/400/500'">
+            </div>
+            <h2 class="profile-name">{{ talent.name }}</h2>
+            <p class="profile-role">{{ talent.role }}</p>
+            
+            <div class="profile-stats">
+                <div class="stat-box">
+                    <div class="stat-number">{{ profile_views }}</div>
+                    <div class="stat-label">Profile Views</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ matches }}</div>
+                    <div class="stat-label">Matches</div>
+                </div>
+            </div>
+
+            <div class="bio-section">
+                <h3 class="section-title">About Me</h3>
+                <p class="bio-text">{{ talent.bio }}</p>
+            </div>
+
+            <a href="{{ url_for('edit_profile') }}" class="edit-profile-btn">Edit Profile</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <div class="section-card">
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="recent-activity">
+                    {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                {% if activity.type == 'match' %}
+                                    👍
+                                {% else %}
+                                    👀
+                                {% endif %}
+                            </div>
+                            <div class="activity-details">
+                                <h4>{{ 'New Match!' if activity.type == 'match' else 'Profile View' }}</h4>
+                                <p>
+                                    {% if activity.type == 'match' %}
+                                        {{ activity.agency_email }} liked your profile
+                                    {% else %}
+                                        Your profile was viewed by {{ activity.agency_email }}
+                                    {% endif %}
+                                </p>
+                                <small>{{ activity.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    {% if not recent_activities %}
+                        <div class="activity-item">
+                            <p>No recent activity</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3 class="section-title">Upcoming Auditions</h3>
+                <div class="recent-activity">
+                    <div class="activity-item">
+                        <div class="activity-icon">📅</div>
+                        <div class="activity-details">
+                            <h4>Commercial Shoot</h4>
+                            <p>Tomorrow at 2:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📅</div>
+                        <div class="activity-details">
+                            <h4>TV Series Role</h4>
+                            <p>Next Week, Monday at 10:00 AM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
